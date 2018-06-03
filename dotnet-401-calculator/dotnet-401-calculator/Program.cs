@@ -12,15 +12,20 @@ namespace dotnet_401_calculator
             bool rerun = false;
 
             Intro();
-
+            //This do/while ensures that the user can continue
+            //to do math equations if desired
             do
             {
+                //This loop allows users to confirm the 
+                //variables they've selected
                 do
                 {
                     VariableSelector(variables);
                     confirm = ConfirmVar(variables);
 
                 } while (confirm);
+                //This loop helps catch selection outside of the
+                //current scope
                 do
                 {
                     int operation = OperandSelector();
@@ -35,7 +40,8 @@ namespace dotnet_401_calculator
             GamePlay();
         }
 
-        //***** Menu Interactions
+        //***** Menu Interactions live in this block and happen in the order
+        //      that the user will experience them
         private static void Intro()
         {
             Console.WriteLine("Welcome to the awesomest Calculator because math");
@@ -109,7 +115,20 @@ namespace dotnet_401_calculator
             Console.ReadLine();
             return rerun;
         }
-        //***** User Confirmation to either keep or re-run the variable selection
+        private static void GamePlay()
+        {
+            Console.Clear();
+            Console.Write("Would you like to play a game? y/n: ");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y") NumberGuesser();
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Well fine then. Have a good day");
+                Console.ReadLine();
+            }
+        }
+        //***** User Confirmation to either keep or re-run specified loops
         private static bool ConfirmVar(double[] variables)
         {
             Console.Clear();
@@ -127,20 +146,8 @@ namespace dotnet_401_calculator
             if (input == "y") return true;
             else return false;
         }
-        private static void GamePlay()
-        {
-            Console.Clear();
-            Console.Write("Would you like to play a game? y/n: ");
-            string input = Console.ReadLine().ToLower();
-            if (input == "y") NumberGuesser();
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("Well fine then. Have a good day");
-                Console.ReadLine();
-            }
-        }
-        //***** Math operations
+        //***** Math operations live here and are in the order of the switch statement
+        //      with the exception of the Math.Pow method
         private static double Addition(double a, double b)
         {
             return a + b;
@@ -161,7 +168,8 @@ namespace dotnet_401_calculator
         {
             return a % b;
         }
-        //***** Game
+        //***** Game Brain sits here. It uses the Random Class to generate a
+        //      number between 1 and 10 and the user has 3 attempts before exiting
         private static void NumberGuesser()
         {
             Console.Clear();
@@ -184,7 +192,7 @@ namespace dotnet_401_calculator
                 } else
                 {
                     Console.WriteLine($"Woohoo! You did it! {input} is the {ranNum}!");
-                    Console.Write("\n");
+                    Console.WriteLine("See you next time!");
                     success = true;
                     guess = 0;
                     Console.ReadLine();
