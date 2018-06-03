@@ -30,8 +30,9 @@ namespace dotnet_401_calculator
                 } while (rerun);
 
                 active = AppContinue();
-
             } while (active);
+
+            GamePlay();
         }
 
         //***** Menu Interactions
@@ -126,7 +127,19 @@ namespace dotnet_401_calculator
             if (input == "y") return true;
             else return false;
         }
-
+        private static void GamePlay()
+        {
+            Console.Clear();
+            Console.Write("Would you like to play a game? y/n: ");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y") NumberGuesser();
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Well fine then. Have a good day");
+                Console.ReadLine();
+            }
+        }
         //***** Math operations
         private static double Addition(double a, double b)
         {
@@ -147,6 +160,43 @@ namespace dotnet_401_calculator
         private static double Remainder(double a, double b)
         {
             return a % b;
+        }
+        //***** Game
+        private static void NumberGuesser()
+        {
+            Console.Clear();
+            Random random = new Random();
+            int ranNum = random.Next(1, 11);
+            int guess = 3;
+            bool success = false;
+            Console.WriteLine("Welcome to the Number Guesser. Pick a number between 1 and 10. You get three chances!");
+            Console.Write("\n\n");
+            while(guess > 0)
+            {
+                int input = Int32.Parse(Console.ReadLine());
+                if(input != ranNum)
+                {
+                    Console.WriteLine($"No. {input} isn't the number. Go ahead and try again!");
+                    Console.Write("\n");
+                    guess--;
+                    Console.WriteLine($"You have {guess} left");
+                    Console.WriteLine($"Try again!");
+                } else
+                {
+                    Console.WriteLine($"Woohoo! You did it! {input} is the {ranNum}!");
+                    Console.Write("\n");
+                    success = true;
+                    guess = 0;
+                    Console.ReadLine();
+                }
+            }
+            if (!success)
+            {
+                Console.Clear();
+                Console.WriteLine($"Oh not this time. the number was {ranNum}");
+                Console.WriteLine("Bye-bye!");
+                Console.ReadLine();
+            }
         }
     }
 }
