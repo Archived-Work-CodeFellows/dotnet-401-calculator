@@ -8,19 +8,31 @@ namespace dotnet_401_calculator
         {
             double[] variables = new double[2];
             bool confirm = true;
+            bool active = true;
+            bool rerun = false;
+
             Intro();
 
             do
             {
-                VariableSelector(variables);
-                confirm = ConfirmVar(variables);
+                do
+                {
+                    VariableSelector(variables);
+                    confirm = ConfirmVar(variables);
 
-            } while (confirm);
-            int operation = OperandSelector();
-            Console.WriteLine($"You Picked {operation}");
-            Calculations(operation, variables);
+                } while (confirm);
+                do
+                {
+                    int operation = OperandSelector();
+                    Console.WriteLine($"You Picked {operation}");
+                    rerun = Calculations(operation, variables);
 
-            Console.ReadLine();
+                } while (rerun);
+
+                active = AppContinue();
+            } while (active);
+
+            GamePlay();
         }
 
         //***** Menu Interactions
@@ -28,6 +40,8 @@ namespace dotnet_401_calculator
         {
             Console.WriteLine("Welcome to the awesomest Calculator because math");
             Console.Write("\n\n");
+            Console.WriteLine("Think about the operation you would like to proceed with when selecting numbers");
+            Console.Write("\n");
             Console.Write("Press enter to begin mathing...");
             Console.ReadLine();
         }
@@ -50,33 +64,50 @@ namespace dotnet_401_calculator
             Console.WriteLine("2) subtraction");
             Console.WriteLine("3) multiplication");
             Console.WriteLine("4) division");
+            Console.WriteLine("5) power");
+            Console.WriteLine("6) modulo/remainder");
             Console.Write("\n\n");
             Console.Write("Please select a option... ");
             return Int32.Parse(Console.ReadLine());
 
         }
-        private static void Calculations(int operation, double[] variables)
+        private static bool Calculations(int operation, double[] variables)
         {
             double result;
-            switch(operation)
+            bool rerun = false;
+            switch (operation)
             {
                 case 1:
                     result = Addition(variables[0], variables[1]);
-                    Console.WriteLine($"After adding them together, we got {result}");
+                    Console.WriteLine($"Welcome to the summation nation. {result} is your answer.");
                     break;
                 case 2:
                     result = Subtraction(variables[0], variables[1]);
-                    Console.WriteLine($"After subtracting them from another, we got {result}");
+                    Console.WriteLine($"Subtract that. {result} is the reasonable response.");
                     break;
                 case 3:
                     result = Multiplication(variables[0], variables[1]);
-                    Console.WriteLine($"After multiplying them together, we got {result}");
+                    Console.WriteLine($"Multiplication situation. {result} is your answer.");
                     break;
                 case 4:
                     result = Division(variables[0], variables[1]);
-                    Console.WriteLine($"After dividing them from another, we got {result}");
+                    Console.WriteLine($"After dividing them from another, we got {result}. No catchy thing here.");
+                    break;
+                case 5:
+                    result = Math.Pow(variables[0], variables[1]);
+                    Console.WriteLine($"After summoning the power of greyskull, we exponentially got {result}");
+                    break;
+                case 6:
+                    result = Remainder(variables[0], variables[1]);
+                    Console.WriteLine($"I'm here to give you a remainder. {result} is left");
+                    break;
+                default:
+                    Console.WriteLine($"Sorry but {operation} isn't a valid choice");
+                    rerun = true;
                     break;
             }
+            Console.ReadLine();
+            return rerun;
         }
         //***** User Confirmation to either keep or re-run the variable selection
         private static bool ConfirmVar(double[] variables)
@@ -88,7 +119,27 @@ namespace dotnet_401_calculator
             string input = Console.ReadLine();
             return input == "n" ? true : false;
         }
-
+        private static bool AppContinue()
+        {
+            Console.Clear();
+            Console.Write("Would you like to continue the math? y/n: ");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y") return true;
+            else return false;
+        }
+        private static void GamePlay()
+        {
+            Console.Clear();
+            Console.Write("Would you like to play a game? y/n: ");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y") NumberGuesser();
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Well fine then. Have a good day");
+                Console.ReadLine();
+            }
+        }
         //***** Math operations
         private static double Addition(double a, double b)
         {
@@ -105,6 +156,47 @@ namespace dotnet_401_calculator
         private static double Division(double a, double b)
         {
             return a / b;
+        }
+        private static double Remainder(double a, double b)
+        {
+            return a % b;
+        }
+        //***** Game
+        private static void NumberGuesser()
+        {
+            Console.Clear();
+            Random random = new Random();
+            int ranNum = random.Next(1, 11);
+            int guess = 3;
+            bool success = false;
+            Console.WriteLine("Welcome to the Number Guesser. Pick a number between 1 and 10. You get three chances!");
+            Console.Write("\n\n");
+            while(guess > 0)
+            {
+                int input = Int32.Parse(Console.ReadLine());
+                if(input != ranNum)
+                {
+                    Console.WriteLine($"No. {input} isn't the number. Go ahead and try again!");
+                    Console.Write("\n");
+                    guess--;
+                    Console.WriteLine($"You have {guess} left");
+                    Console.WriteLine($"Try again!");
+                } else
+                {
+                    Console.WriteLine($"Woohoo! You did it! {input} is the {ranNum}!");
+                    Console.Write("\n");
+                    success = true;
+                    guess = 0;
+                    Console.ReadLine();
+                }
+            }
+            if (!success)
+            {
+                Console.Clear();
+                Console.WriteLine($"Oh not this time. the number was {ranNum}");
+                Console.WriteLine("Bye-bye!");
+                Console.ReadLine();
+            }
         }
     }
 }
