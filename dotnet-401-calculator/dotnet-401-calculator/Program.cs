@@ -36,7 +36,8 @@ namespace dotnet_401_calculator
 
                 active = AppContinue();
             } while (active);
-
+            //This will give the user a chance to play a
+            //small game after they have finished mathing
             GamePlay();
         }
 
